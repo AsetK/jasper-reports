@@ -20,7 +20,7 @@ public class PDFReportService {
     @Autowired
     PersonRepository personRepository;
 
-    public void createReport() throws FileNotFoundException, JRException {
+    public void createReportAsPDFFileOnDisk() throws FileNotFoundException, JRException {
         List<Person> personList = personRepository.findAll();
         JRBeanCollectionDataSource source = new JRBeanCollectionDataSource(personList);
 
@@ -30,6 +30,19 @@ public class PDFReportService {
         params.put("createdBy", "AK");
         JasperPrint jasperPrint = JasperFillManager.fillReport(template, params, source);
         JasperExportManager.exportReportToPdfFile(jasperPrint, "C:\\Users\\AK\\IdeaProjects\\jasper-reports\\src\\main\\resources\\person.pdf");
+    }
+
+    public byte[] createReportAsPDFBytesInMemory() throws FileNotFoundException, JRException {
+        List<Person> personList = personRepository.findAll();
+        JRBeanCollectionDataSource source = new JRBeanCollectionDataSource(personList);
+
+        File file = ResourceUtils.getFile("classpath:person_report.jrxml");
+        JasperReport template = JasperCompileManager.compileReport(file.getAbsolutePath());
+        Map<String, Object> params = new HashMap<>();
+        params.put("createdBy", "AK");
+        JasperPrint jasperPrint = JasperFillManager.fillReport(template, params, source);
+        byte[] bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        return bytes;
     }
 
 }
