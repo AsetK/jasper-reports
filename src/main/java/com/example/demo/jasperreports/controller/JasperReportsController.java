@@ -40,7 +40,7 @@ public class JasperReportsController {
     }
 
     @GetMapping(value = "/pdfreport2", produces = MediaType.APPLICATION_PDF_VALUE)
-    public @ResponseBody byte[] reportPDF2() throws FileNotFoundException, JRException {
+    public byte[] reportPDF2() throws FileNotFoundException, JRException {
         return pdfReportService.createReportAsPDFBytesInMemory();
     }
 }
